@@ -1,0 +1,32 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<h1 class="mb-4">Add Job</h1>
+
+<form action="/add" method="post">
+
+    <div class="mb-3">
+        <input class="form-control" name="company" placeholder="Company">
+    </div>
+
+    <div class="mb-3">
+        <input class="form-control" name="position" placeholder="Position">
+    </div>
+
+    <div class="mb-3">
+        <select class="form-select" name="status">
+            <option>Applied</option>
+            <option>Interview</option>
+            <option>Rejected</option>
+            <option>Offer</option>
+        </select>
+    </div>
+
+    <button class="btn btn-primary" type="submit">
+        Add Job
+    </button>
+
+</form>
+
+{% endblock %}

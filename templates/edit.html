@@ -1,0 +1,55 @@
+{% extends "layout.html" %}
+
+{% block main %}
+
+<h1 class="mb-4">Edit Job</h1>
+
+<form method="post">
+
+    <div class="mb-3">
+        <input
+            class="form-control"
+            name="company"
+            value="{{ job[1] }}"
+        >
+    </div>
+
+    <div class="mb-3">
+        <input
+            class="form-control"
+            name="position"
+            value="{{ job[2] }}"
+        >
+    </div>
+
+    <div class="mb-3">
+
+        <select class="form-select" name="status">
+
+            <option {% if job[3] == "Applied" %}selected{% endif %}>
+                Applied
+            </option>
+
+            <option {% if job[3] == "Interview" %}selected{% endif %}>
+                Interview
+            </option>
+
+            <option {% if job[3] == "Rejected" %}selected{% endif %}>
+                Rejected
+            </option>
+
+            <option {% if job[3] == "Offer" %}selected{% endif %}>
+                Offer
+            </option>
+
+        </select>
+
+    </div>
+
+    <button class="btn btn-primary" type="submit">
+        Save Changes
+    </button>
+
+</form>
+
+{% endblock %}
