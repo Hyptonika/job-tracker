@@ -15,10 +15,22 @@
 
             <a class="navbar-brand" href="/">Job Tracker</a>
 
-            <div class="navbar-nav ms-auto">
+        <div class="navbar-nav ms-auto">
+
+            {% if session.get("user_id") %}
+
+                <a class="nav-link" href="/">Home</a>
+                <a class="nav-link" href="/add">Add Job</a>
+                <a class="nav-link" href="/logout">Logout</a>
+
+            {% else %}
+
                 <a class="nav-link" href="/login">Login</a>
                 <a class="nav-link" href="/register">Register</a>
-            </div>
+
+            {% endif %}
+
+        </div>
 
         </div>
     </nav>

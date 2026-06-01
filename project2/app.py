@@ -1,10 +1,11 @@
 import sqlite3
 
 from flask import Flask, render_template, request, redirect
-
+from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
 
 app = Flask(__name__)
+app.secret_key = "my_secret_key"
 
 conn = sqlite3.connect("jobs.db", check_same_thread=False)
 db = conn.cursor()
@@ -12,6 +13,7 @@ db = conn.cursor()
 db.execute("""
 CREATE TABLE IF NOT EXISTS jobs (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id INTEGER,
     company TEXT NOT NULL,
     position TEXT NOT NULL,
     status TEXT NOT NULL
@@ -34,7 +36,14 @@ conn.commit()
 @app.route("/")
 def index():
 
-    db.execute("SELECT * FROM jobs")
+    if "user_id" not in session:
+        return redirect("/login")
+
+    db.execute(
+        "SELECT * FROM jobs WHERE user_id = ?",
+        (session["user_id"],)
+    )
+
     jobs = db.fetchall()
 
     return render_template("index.html", jobs=jobs)
@@ -49,9 +58,9 @@ def add():
         status = request.form.get("status")
 
         db.execute(
-            "INSERT INTO jobs (company, position, status) VALUES (?, ?, ?)",
-            (company, position, status)
-        )
+        "INSERT INTO jobs (user_id, company, position, status) VALUES (?, ?, ?, ?)",
+        (session["user_id"], company, position, status)
+    )
 
         conn.commit()
 
@@ -110,3 +119,29 @@ def register():
         return redirect("/")
 
     return render_template("register.html")
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+
+    if request.method == "POST":
+
+        username = request.form.get("username")
+        password = request.form.get("password")
+
+        db.execute("SELECT * FROM users WHERE username = ?", (username,))
+        user = db.fetchone()
+
+        if user and check_password_hash(user[2], password):
+
+            session["user_id"] = user[0]
+
+            return redirect("/")
+
+    return render_template("login.html")
+
+@app.route("/logout")
+def logout():
+
+    session.clear()
+
+    return redirect("/login")
