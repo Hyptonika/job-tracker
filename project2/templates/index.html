@@ -7,6 +7,9 @@
 <a href="/add" class="btn btn-primary mb-4">
     Add Job
 </a>
+    <h1 class="mb-4">My Job Applications</h1>
+    <p class="text-muted">Total jobs: {{ jobs|length }}</p>
+
 
 <table class="table table-bordered table-hover">
 
@@ -27,6 +30,22 @@
             <td>{{ job[2] }}</td>  <!-- company -->
             <td>{{ job[3] }}</td>  <!-- position -->
             <td>{{ job[4] }}</td>  <!-- status -->
+            <td>{% if job[4] == "Applied" %}
+                <span class="badge bg-primary">Applied</span>
+
+            {% elif job[4] == "Interview" %}
+                <span class="badge bg-warning">Interview</span>
+
+            {% elif job[4] == "Offer" %}
+                <span class="badge bg-success">Offer</span>
+
+            {% elif job[4] == "Rejected" %}
+                <span class="badge bg-danger">Rejected</span>
+
+            {% else %}
+                {{ job[4] }}
+            {% endif %}
+            </td>
 
                 <td class="d-flex gap-2">
 
