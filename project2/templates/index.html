@@ -2,14 +2,19 @@
 
 {% block main %}
 
+{% if jobs %}
+
 <h1 class="mb-4">Job Application Tracker</h1>
 
 <a href="/add" class="btn btn-primary mb-4">
     Add Job
 </a>
-    <h1 class="mb-4">My Job Applications</h1>
-    <p class="text-muted">Total jobs: {{ jobs|length }}</p>
 
+<p>
+    <span class="badge bg-secondary">
+        Total Jobs: {{ jobs|length }}
+    </span>
+</p>
 
 <table class="table table-bordered table-hover">
 
@@ -65,5 +70,17 @@
     </tbody>
 
 </table>
+
+{% else %}
+
+<div class="alert alert-info">
+    You haven't added any job applications yet.
+</div>
+
+<a href="/add" class="btn btn-primary">
+    Add Your First Job
+</a>
+
+{% endif %}
 
 {% endblock %}
