@@ -6,6 +6,10 @@
 
 <h1 class="mb-4">Job Application Tracker</h1>
 
+<p class="text-muted">
+    Welcome, {{ session["username"] }}!
+</p>
+
 <a href="/add" class="btn btn-primary mb-4">
     Add Job
 </a>
@@ -58,7 +62,10 @@
                         Edit
                     </a>
                     <form action="/delete/{{ job[0] }}" method="post" style="display:inline;">
-                    <button class="btn btn-danger btn-sm" type="submit">
+                    <button
+                        class="btn btn-danger btn-sm"
+                        type="submit"
+                        onclick="return confirm('Delete this job?')">
                         Delete
                     </button>
                 </form>
