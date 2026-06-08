@@ -10,6 +10,20 @@
     Welcome, {{ session["username"] }}!
 </p>
 
+<div class="mb-3">
+    <span class="badge bg-primary">
+        Applied: {{ applied }}
+    </span>
+
+    <span class="badge bg-warning text-dark">
+        Interview: {{ interview }}
+    </span>
+
+    <span class="badge bg-success">
+        Offer: {{ offer }}
+    </span>
+</div>
+
 <a href="/add" class="btn btn-primary mb-4">
     Add Job
 </a>
@@ -28,6 +42,7 @@
             <th>Position</th>
             <th>Status</th>
             <th>Action</th>
+            <th>Date</th>
         </tr>
     </thead>
 
@@ -38,7 +53,8 @@
         <tr>
             <td>{{ job[2] }}</td>  <!-- company -->
             <td>{{ job[3] }}</td>  <!-- position -->
-            <td>{{ job[4] }}</td>  <!-- status -->
+            <td>{{ job[5] }}</td>  <!-- Date -->
+            <!-- status -->
             <td>{% if job[4] == "Applied" %}
                 <span class="badge bg-primary">Applied</span>
 
@@ -52,7 +68,7 @@
                 <span class="badge bg-danger">Rejected</span>
 
             {% else %}
-                {{ job[4] }}
+                <span class="badge bg-secondary">{{ job[4] }}</span>
             {% endif %}
             </td>
 

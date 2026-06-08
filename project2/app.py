@@ -3,6 +3,7 @@ import sqlite3
 from flask import Flask, render_template, request, redirect
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 app = Flask(__name__)
 app.secret_key = "my_secret_key"
@@ -46,7 +47,25 @@ def index():
 
     jobs = db.fetchall()
 
-    return render_template("index.html", jobs=jobs)
+    applied = 0
+    interview = 0
+    offer = 0
+
+    for job in jobs:
+        if job[4] == "Applied":
+            applied += 1
+        elif job[4] == "Interview":
+            interview += 1
+        elif job[4] == "Offer":
+            offer += 1
+
+    return render_template(
+        "index.html",
+        jobs=jobs,
+        applied=applied,
+        interview=interview,
+        offer=offer
+    )
 
 @app.route("/add", methods=["GET", "POST"])
 def add():
@@ -57,10 +76,12 @@ def add():
         position = request.form.get("position")
         status = request.form.get("status")
 
+        created_at = datetime.now().strftime("%Y-%m-%d")
+
         db.execute(
-        "INSERT INTO jobs (user_id, company, position, status) VALUES (?, ?, ?, ?)",
-        (session["user_id"], company, position, status)
-    )
+            "INSERT INTO jobs (user_id, company, position, status, created_at) VALUES (?, ?, ?, ?, ?)",
+            (session["user_id"], company, position, status, created_at)
+        )
 
         conn.commit()
 
