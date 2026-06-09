@@ -41,8 +41,8 @@
             <th>Company</th>
             <th>Position</th>
             <th>Status</th>
-            <th>Action</th>
             <th>Date</th>
+            <th>Action</th>
         </tr>
     </thead>
 
@@ -53,7 +53,6 @@
         <tr>
             <td>{{ job[2] }}</td>  <!-- company -->
             <td>{{ job[3] }}</td>  <!-- position -->
-            <td>{{ job[5] }}</td>  <!-- Date -->
             <!-- status -->
             <td>{% if job[4] == "Applied" %}
                 <span class="badge bg-primary">Applied</span>
@@ -71,6 +70,8 @@
                 <span class="badge bg-secondary">{{ job[4] }}</span>
             {% endif %}
             </td>
+
+            <td>{{ job[5] }}</td>  <!-- Date -->
 
                 <td class="d-flex gap-2">
 
