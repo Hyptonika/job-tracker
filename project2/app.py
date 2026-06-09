@@ -41,7 +41,7 @@ def index():
         return redirect("/login")
 
     db.execute(
-        "SELECT * FROM jobs WHERE user_id = ?",
+        "SELECT * FROM jobs WHERE user_id = ? ORDER BY id DESC",
         (session["user_id"],)
     )
 
