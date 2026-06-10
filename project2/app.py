@@ -1,6 +1,6 @@
 import sqlite3
 
-from flask import Flask, render_template, request, redirect
+from flask import Flask, render_template, request, redirect, flash
 from flask import session
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
@@ -50,6 +50,7 @@ def index():
     applied = 0
     interview = 0
     offer = 0
+    rejected = 0
 
     for job in jobs:
         if job[4] == "Applied":
@@ -58,13 +59,16 @@ def index():
             interview += 1
         elif job[4] == "Offer":
             offer += 1
+        elif job[4] == "Rejected":
+            rejected += 1
 
     return render_template(
         "index.html",
         jobs=jobs,
         applied=applied,
         interview=interview,
-        offer=offer
+        offer=offer,
+        rejected=rejected
     )
 
 @app.route("/add", methods=["GET", "POST"])
@@ -85,6 +89,8 @@ def add():
 
         conn.commit()
 
+        flash("Job added successfully!", "success")
+
         return redirect("/")
 
     return render_template("add.html")
@@ -94,6 +100,8 @@ def delete(job_id):
 
     db.execute("DELETE FROM jobs WHERE id = ?", (job_id,))
     conn.commit()
+
+    flash("Job deleted successfully!", "danger")
 
     return redirect("/")
 
@@ -113,10 +121,13 @@ def edit(job_id):
 
         conn.commit()
 
+        flash("Job updated successfully!", "success")
+
         return redirect("/")
 
     db.execute("SELECT * FROM jobs WHERE id = ?", (job_id,))
     job = db.fetchone()
+    
 
     return render_template("edit.html", job=job)
 
