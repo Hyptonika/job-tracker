@@ -40,10 +40,18 @@ def index():
     if "user_id" not in session:
         return redirect("/login")
 
-    db.execute(
-        "SELECT * FROM jobs WHERE user_id = ? ORDER BY id DESC",
-        (session["user_id"],)
-    )
+    status_filter = request.args.get("status")
+
+    if status_filter:
+        db.execute(
+            "SELECT * FROM jobs WHERE user_id = ? AND status = ? ORDER BY id DESC",
+            (session["user_id"], status_filter)
+        )
+    else:
+        db.execute(
+            "SELECT * FROM jobs WHERE user_id = ? ORDER BY id DESC",
+            (session["user_id"],)
+        )
 
     jobs = db.fetchall()
 
