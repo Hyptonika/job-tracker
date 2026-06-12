@@ -41,18 +41,23 @@ def index():
         return redirect("/login")
 
     status_filter = request.args.get("status")
+    search = request.args.get("search")
+
+    query = "SELECT * FROM jobs WHERE user_id = ?"
+    params = [session["user_id"]]
 
     if status_filter:
-        db.execute(
-            "SELECT * FROM jobs WHERE user_id = ? AND status = ? ORDER BY id DESC",
-            (session["user_id"], status_filter)
-        )
-    else:
-        db.execute(
-            "SELECT * FROM jobs WHERE user_id = ? ORDER BY id DESC",
-            (session["user_id"],)
-        )
+        query += " AND status = ?"
+        params.append(status_filter)
 
+    if search:
+        query += " AND (company LIKE ? OR position LIKE ?)"
+        params.append(f"%{search}%")
+        params.append(f"%{search}%")
+
+    query += " ORDER BY id DESC"
+
+    db.execute(query, tuple(params))
     jobs = db.fetchall()
 
     applied = 0

@@ -54,6 +54,16 @@
 
 </div>
 
+<form method="GET" class="mb-3">
+    <input
+        type="text"
+        name="search"
+        class="form-control"
+        placeholder="Search company or position..."
+        value="{{ request.args.get('search', '') }}"
+    >
+</form>
+
 <table class="table table-bordered table-hover">
 
     <thead>
@@ -117,13 +127,23 @@
 
 {% else %}
 
-<div class="alert alert-info">
-    You haven't added any job applications yet.
-</div>
+    {% if request.args.get("search") %}
 
-<a href="/add" class="btn btn-primary">
-    Add Your First Job
-</a>
+        <div class="alert alert-warning">
+            No jobs found matching your search.
+        </div>
+
+    {% else %}
+
+        <div class="alert alert-info">
+            You haven't added any job applications yet.
+        </div>
+
+        <a href="/add" class="btn btn-primary">
+            Add Your First Job
+        </a>
+
+    {% endif %}
 
 {% endif %}
 
