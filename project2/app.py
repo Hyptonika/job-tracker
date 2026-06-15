@@ -92,6 +92,7 @@ def add():
         company = request.form.get("company")
         position = request.form.get("position")
         status = request.form.get("status")
+        notes = request.form.get("notes")
 
         created_at = datetime.now().strftime("%Y-%m-%d")
 
