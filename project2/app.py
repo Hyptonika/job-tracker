@@ -97,8 +97,11 @@ def add():
         created_at = datetime.now().strftime("%Y-%m-%d")
 
         db.execute(
-            "INSERT INTO jobs (user_id, company, position, status, created_at) VALUES (?, ?, ?, ?, ?)",
-            (session["user_id"], company, position, status, created_at)
+            """
+            INSERT INTO jobs (user_id, company, position, status, created_at, notes)
+            VALUES (?, ?, ?, ?, ?, ?)
+            """,
+            (session["user_id"], company, position, status, created_at, notes)
         )
 
         conn.commit()
@@ -127,10 +130,15 @@ def edit(job_id):
         company = request.form.get("company")
         position = request.form.get("position")
         status = request.form.get("status")
+        notes = request.form.get("notes")
 
         db.execute(
-            "UPDATE jobs SET company = ?, position = ?, status = ? WHERE id = ?",
-            (company, position, status, job_id)
+        """
+        UPDATE jobs
+        SET company = ?, position = ?, status = ?, notes = ?
+        WHERE id = ?
+        """,
+        (company, position, status, notes, job_id)
         )
 
         conn.commit()
@@ -140,6 +148,7 @@ def edit(job_id):
         return redirect("/")
 
     db.execute("SELECT * FROM jobs WHERE id = ?", (job_id,))
+
     job = db.fetchone()
     
 
