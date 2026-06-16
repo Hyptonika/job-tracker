@@ -2,46 +2,33 @@
 
 {% block main %}
 
-<h1 class="mb-4">{{ session["username"] }}'s Job Application Tracker</h1>
-
-<p class="text-muted">
-    Welcome back, {{ session["username"] }}!
-</p>
-
-<div class="mb-3">
-    <span class="badge bg-primary">
-        Applied: {{ applied }}
-    </span>
-
-    <span class="badge bg-warning text-dark">
-        Interview: {{ interview }}
-    </span>
-
-    <span class="badge bg-success">
-        Offer: {{ offer }}
-    </span>
-
-    <span class="badge bg-danger">
-        Rejected: {{ rejected }}
-    </span>
+<div class="mb-4">
+    <h1 style="font-size: 1.5rem; font-weight: 500;">Job Application Tracker</h1>
+    <p class="text-muted mb-0">Welcome back, {{ session["username"] }}!</p>
 </div>
 
-<a href="/add" class="btn btn-primary mb-4">
-    Add Job
-</a>
+<div class="d-flex gap-2 mb-4 flex-wrap">
+    <span class="badge bg-secondary">Total: {{ jobs|length }}</span>
+    <span class="badge bg-primary">Applied: {{ applied }}</span>
+    <span class="badge bg-warning text-dark">Interview: {{ interview }}</span>
+    <span class="badge bg-success">Offer: {{ offer }}</span>
+    <span class="badge bg-danger">Rejected: {{ rejected }}</span>
+</div>
 
-<p>
-    <span class="badge bg-secondary">
-        Total Jobs: {{ jobs|length }}
-    </span>
-</p>
+<div class="mb-4">
+    <a href="/add" class="btn btn-primary">
+        + Add Job
+    </a>
+</div>
 
-<div class="mb-3">
-    <a href="/" class="btn btn-sm btn-secondary">All</a>
-    <a href="/?status=Applied" class="btn btn-sm btn-primary">Applied</a>
-    <a href="/?status=Interview" class="btn btn-sm btn-warning">Interview</a>
-    <a href="/?status=Offer" class="btn btn-sm btn-success">Offer</a>
-    <a href="/?status=Rejected" class="btn btn-sm btn-danger">Rejected</a>
+{% set current_status = request.args.get('status', '') %}
+
+<div class="d-flex gap-2 mb-3 flex-wrap">
+    <a href="/" class="btn btn-sm {{ 'btn-secondary' if current_status == '' else 'bg-secondary-subtle text-secondary-emphasis border-0' }}">All</a>
+    <a href="/?status=Applied" class="btn btn-sm {{ 'btn-primary' if current_status == 'Applied' else 'bg-secondary-subtle text-secondary-emphasis border-0' }}">Applied</a>
+    <a href="/?status=Interview" class="btn btn-sm {{ 'btn-warning' if current_status == 'Interview' else 'bg-secondary-subtle text-secondary-emphasis border-0' }}">Interview</a>
+    <a href="/?status=Offer" class="btn btn-sm {{ 'btn-success' if current_status == 'Offer' else 'bg-secondary-subtle text-secondary-emphasis border-0' }}">Offer</a>
+    <a href="/?status=Rejected" class="btn btn-sm {{ 'btn-danger' if current_status == 'Rejected' else 'bg-secondary-subtle text-secondary-emphasis border-0' }}">Rejected</a>
 </div>
 
 <form method="GET" class="mb-3">
@@ -70,7 +57,7 @@
 
                         <div>
                             <h4 class="fw-bold mb-1">{{ job[2] }}</h4>
-                            <p class="text-secondary mb-0">{{ job[3] }}</p>
+                            <p class="mb-0 mt-2">{{ job[3] }}</p>
                         </div>
 
                         {% if job[4] == "Applied" %}
@@ -85,15 +72,15 @@
 
                     </div>
 
-                    <small class="text-muted d-block mt-1">
-                       Applied on:  {{ job[5] }}
+                    <small class="text-muted d-block mt-1" style="font-size: 0.75rem;">
+                       Applied on: {{ job[5] }}
                     </small>
 
                     <div class="d-flex justify-content-between align-items-end mt-2">
 
                         {% if job[6] %}
-                        <p class="mb-0">
-                            <strong>Notes:</strong> {{ job[6] }}
+                        <p class="mb-0 mt-2">
+                            Notes: {{ job[6] }}
                         </p>
                         {% else %}
                         <span></span>
