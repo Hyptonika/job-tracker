@@ -1,4 +1,5 @@
 import sqlite3
+import os
 
 from flask import Flask, render_template, request, redirect, flash
 from flask import session
@@ -6,7 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
-app.secret_key = "my_secret_key"
+app.secret_key = os.environ.get("SECRET_KEY", "dev-fallback-key-change-me")
 
 conn = sqlite3.connect("jobs.db", check_same_thread=False)
 db = conn.cursor()
@@ -17,7 +18,9 @@ CREATE TABLE IF NOT EXISTS jobs (
     user_id INTEGER,
     company TEXT NOT NULL,
     position TEXT NOT NULL,
-    status TEXT NOT NULL
+    status TEXT NOT NULL,
+    created_at TEXT,
+    notes TEXT
 )
 """)
 
@@ -96,6 +99,10 @@ def add():
 
         created_at = datetime.now().strftime("%Y-%m-%d")
 
+        if not company or not position or not status:
+            flash("Company, position, and status are required.", "danger")
+            return redirect("/add")
+
         db.execute(
             """
             INSERT INTO jobs (user_id, company, position, status, created_at, notes)
@@ -114,16 +121,20 @@ def add():
 
 @app.route("/delete/<int:job_id>", methods=["POST"])
 def delete(job_id):
+    if "user_id" not in session:
+        return redirect("/login")
 
-    db.execute("DELETE FROM jobs WHERE id = ?", (job_id,))
+    db.execute("DELETE FROM jobs WHERE id = ? AND user_id = ?", (job_id, session["user_id"]))
     conn.commit()
 
     flash("Job deleted successfully!", "danger")
-
     return redirect("/")
 
 @app.route("/edit/<int:job_id>", methods=["GET", "POST"])
 def edit(job_id):
+
+    if "user_id" not in session:
+        return redirect("/login")
 
     if request.method == "POST":
 
@@ -136,9 +147,9 @@ def edit(job_id):
         """
         UPDATE jobs
         SET company = ?, position = ?, status = ?, notes = ?
-        WHERE id = ?
+        WHERE id = ? AND user_id = ?
         """,
-        (company, position, status, notes, job_id)
+        (company, position, status, notes, job_id, session["user_id"])
         )
 
         conn.commit()
@@ -147,10 +158,9 @@ def edit(job_id):
 
         return redirect("/")
 
-    db.execute("SELECT * FROM jobs WHERE id = ?", (job_id,))
+    db.execute("SELECT * FROM jobs WHERE id = ? AND user_id = ?", (job_id, session["user_id"]))
 
     job = db.fetchone()
-    
 
     return render_template("edit.html", job=job)
 
@@ -164,14 +174,17 @@ def register():
 
         hash_password = generate_password_hash(password)
 
-        db.execute(
-            "INSERT INTO users (username, password) VALUES (?, ?)",
-            (username, hash_password)
-        )
+        try:
+            db.execute(
+                "INSERT INTO users (username, password) VALUES (?, ?)",
+                (username, hash_password)
+            )
+            conn.commit()
+        except sqlite3.IntegrityError:
+            flash("Username already taken.", "danger")
+            return redirect("/register")
 
-        conn.commit()
-
-        return redirect("/")
+        return redirect("/login")
 
     return render_template("register.html")
 
