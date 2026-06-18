@@ -7,6 +7,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
 
 app = Flask(__name__)
+# Use SECRET_KEY from environment in production; fallback is only for local dev
 app.secret_key = os.environ.get("SECRET_KEY", "dev-fallback-key-change-me")
 
 conn = sqlite3.connect("jobs.db", check_same_thread=False)
