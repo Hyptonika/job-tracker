@@ -4,12 +4,12 @@
 
 A full-stack web app for tracking job applications — register, log in, and manage your own list of applications with status tracking, filtering, and search.
 
-![Dashboard](screenshots/dashboard.png)
+![Dashboard](screenshots/Dashboard.png)
 
 ## What it does
 Add job applications with company, position, and status (Applied, Interview, Offer, Rejected). Filter by status, search by company or position, and see at-a-glance counts for each stage of your pipeline. Each user only sees their own data.
 
-![Add Job](screenshots/add-job.png)
+![Add Job](screenshots/Add-job.png)
 
 ## Tech stack
 - Python, Flask
@@ -17,7 +17,7 @@ Add job applications with company, position, and status (Applied, Interview, Off
 - Jinja2, Bootstrap, HTML/CSS
 - Werkzeug (password hashing)
 
-![Login](screenshots/login.png)
+![Login](screenshots/Login.png)
 
 ## Why I built it
 I was tracking my own job applications in a spreadsheet and wanted something built specifically for the workflow.
