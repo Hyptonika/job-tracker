@@ -40,6 +40,6 @@ pip install -r requirements.txt
 python app.py
 \`\`\`
 
-Author
+## Author
 
 Built by Paul as part of a portfolio project.
