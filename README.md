@@ -34,6 +34,16 @@ I was tracking my own job applications in a spreadsheet and wanted something bui
 - Use the status filter buttons or the search bar to find specific applications
 - Edit or delete any application from its card
 
+## Environment Variables
+
+Create a `.env` file in the project root:
+
+\`\`\`
+SECRET_KEY=your-random-secret-key-here
+\`\`\`
+
+A fallback key is used for local development if `SECRET_KEY` isn't set, but you should always set your own in production.
+
 ## Running it locally
 \`\`\`bash
 pip install -r requirements.txt
